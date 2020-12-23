@@ -37,7 +37,8 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
         use it to filter which files the plugin detects.
         """
 
-    def find_files(self, package: Package) -> None:
+    @classmethod
+    def find_files(cls, package: Package) -> None:
         """Walk the package path exactly once to discover files for analysis."""
         if package._walked:  # pylint: disable=protected-access
             return
@@ -46,7 +47,7 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
             for f in files:
                 full_path = os.path.join(root, f)
                 abs_path = os.path.abspath(full_path)
-                file_output = self.get_file_cmd_output(full_path)
+                file_output = cls.get_file_cmd_output(full_path)
                 file_dict = {
                     "name": f.lower(),
                     "path": abs_path,
@@ -56,7 +57,8 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
 
         package._walked = True  # pylint: disable=protected-access
 
-    def get_file_cmd_output(self, full_path: str) -> str:
+    @classmethod
+    def get_file_cmd_output(cls, full_path: str) -> str:
         """
         Run the file command (if it exists) on the supplied path.
 
@@ -71,7 +73,7 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
             expected_output = ("output_1", "output_2")
             if any(item in file_dict["file_cmd_out"] for item in expected_output):
         """
-        if not self.file_command_exists():
+        if not cls.file_command_exists():
             return ""
 
         try:

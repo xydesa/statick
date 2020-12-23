@@ -8,6 +8,7 @@ import sys
 from typing import Dict, List, Optional
 
 from statick_tool.args import Args
+from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
@@ -46,6 +47,8 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
     ignore_packages = statick.get_ignore_packages()
     ignore_files = ["AMENT_IGNORE", "CATKIN_IGNORE", "COLCON_IGNORE"]
 
+    print("-- Pre-discovery started. --")
+    print("Walking the workspace once.")
     packages = []
     for root, dirs, files in os.walk(parsed_args.path):
         if any(item in files for item in ignore_files):
@@ -59,7 +62,9 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
             ):
                 if ignore_packages and sub_dir in ignore_packages:
                     continue
-                packages.append((sub_dir, full_dir))
+                package = Package(sub_dir, full_dir)
+                DiscoveryPlugin.find_files(package)
+                packages.append(package)
 
     if parsed_args.packages_file is not None:
         packages_file_list = []
@@ -74,7 +79,8 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
         except OSError:
             print("Packages file not found")
             sys.exit(1)
-        packages = [package for package in packages if package[0] in packages_file_list]
+        packages = [package for package in packages if package.name in packages_file_list]
+    print("-- Pre-discovery done. --")
 
     count = 0
     total_issues = []
@@ -82,29 +88,29 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
     for package in packages:
         if parsed_args.list_packages:
             print(
-                "%-40s: %s" % (package[0], statick.get_level(package[1], parsed_args))
+                "%-40s: %s" % (package.name, statick.get_level(package.path, parsed_args))
             )
             continue
 
         count += 1
         print(
             "-- Scanning package "
-            + package[0]
+            + package.name
             + " ("
             + str(count)
             + " of "
             + str(len(packages))
             + ") --"
         )
-        issues, dummy = statick.run(package[1], parsed_args)
+        issues, dummy = statick.run(package.path, parsed_args)
         if issues is not None:
             total_issues.append(issues)
         else:
-            print("Failed to run statick on package " + package[0] + "!")
+            print("Failed to run statick on package " + package.name + "!")
             sys.exit(1)
         print(
             "-- Done scanning package "
-            + package[0]
+            + package.name
             + " ("
             + str(count)
             + " of "
