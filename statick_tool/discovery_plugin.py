@@ -3,30 +3,20 @@ import logging
 import os
 import subprocess
 import sys
-from typing import Any, List, Optional, Union
-
-from yapsy.IPlugin import IPlugin
+from typing import List, Optional
 
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
-from statick_tool.plugin_context import PluginContext
+from statick_tool.statick_plugin import StatickPlugin
 
 
-class DiscoveryPlugin(IPlugin):  # type: ignore
+class DiscoveryPlugin(StatickPlugin):
     """Default implementation of discovery plugin."""
-
-    plugin_context = None
-
-    def get_name(self) -> Optional[str]:
-        """Get name of plugin."""
 
     @classmethod
     def get_discovery_dependencies(cls) -> List[str]:
         """Get a list of discovery plugins that must run before this one."""
         return []
-
-    def gather_args(self, args: Any) -> None:
-        """Gather arguments for plugin."""
 
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
@@ -84,10 +74,6 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
             )
             logging.warning("Exception output: %s", ex.output)
             return ""
-
-    def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
-        """Set the plugin context."""
-        self.plugin_context = plugin_context
 
     @staticmethod
     def file_command_exists() -> bool:
