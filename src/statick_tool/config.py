@@ -72,7 +72,10 @@ class Config:
             with open(filename, encoding="utf8") as fid:
                 try:
                     return yaml.safe_load(fid)
-                except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:
+                except (
+                    yaml.YAMLError,
+                    yaml.scanner.ScannerError,  # pyright: ignore
+                ) as ex:
                     raise ValueError(
                         f"{filename} is not a valid YAML file: {ex}"
                     ) from ex
