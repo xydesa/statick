@@ -15,8 +15,8 @@ pycodestyle
 pydocstyle
 pyflakes
 pylint
-pyright
 pylint-django<2.0
+pyright
 ruff>=0.0.237
 statick
 tabulate
