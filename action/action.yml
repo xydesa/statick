@@ -20,7 +20,7 @@ inputs:
   log_level:
     description: "Log verbosity level"
     required: false
-    default: DEBUG
+    default: INFO
   output_path:
     description: "Path to store output logs"
     required: false
