@@ -1,5 +1,5 @@
 ---
-name: Statick
+name: Test Action
 
 on: # NOLINT
   pull_request:
