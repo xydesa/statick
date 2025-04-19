@@ -1,6 +1,6 @@
 # statick-action
 
-![Statick](https://github.com/triboelectric/statick-action/workflows/Statick/badge.svg)
+![Statick](https://github.com/triboelectric/statick/workflows/self-test.yml/badge.svg)
 
 Improve your code quality by running dozens of the most popular and effective static code analysis
 tools at once from one simple action.
