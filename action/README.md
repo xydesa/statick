@@ -1,6 +1,6 @@
 # statick-action
 
-![Statick](https://github.com/triboelectric/statick/workflows/self-test.yml/badge.svg?branch=525-move-statick-action-this-this-main-repo)
+![Statick](https://github.com/triboelectric/statick/workflows/self-test.yml/badge.svg?branch=525-move-statick-action-into-this-main-repo)
 
 Improve your code quality by running dozens of the most popular and effective static code analysis
 tools at once from one simple action.
